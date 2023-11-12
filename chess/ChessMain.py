@@ -4,7 +4,9 @@ user input and displaying the current GameState object.
 """
 
 import pygame as p
-from chess import ChessEngine, SmartMoveFinnder
+from ChessEngine import GameState, Move
+from SmartMoveFinnder import findBestMove, findRandomMove
+
 from multiprocessing import Process, Queue
 
 BOARD_WIDTH = BOARD_HEIGHT = 512  # 400 IS ANOTHER OPTION
@@ -39,7 +41,7 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     moveLogFont = p.font.SysFont("Arial", 14, False, False)
-    gs = ChessEngine.GameState()
+    gs = GameState()
     validMoves = gs.getValidMoves()
 
     moveMade = False  # flag variable for when a move is made
@@ -72,7 +74,7 @@ def main():
                         sqSelected = (row, col)
                         playerClicks.append(sqSelected)  # append for both 1st and 2nd clicks
                     if len(playerClicks) == 2 and humanTurn:  # after 2nd click
-                        move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
+                        move = Move(playerClicks[0], playerClicks[1], gs.board)
                         print(move.getChessNotation())
                         for i in range(len(validMoves)):
                             if move == validMoves[i]:
@@ -98,7 +100,7 @@ def main():
                     moveUndone = True
 
                 if e.key == p.K_r:  # reset the board when "r" is pressed
-                    gs = ChessEngine.GameState()
+                    gs = GameState()
                     validMoves = gs.getValidMoves()
                     sqSelected = ()
                     playerClicks = []
@@ -116,14 +118,14 @@ def main():
                 AIThinking = True
                 print("Thinking...")
                 returnQueue = Queue()  # used to pass data between threads
-                moveFinderProcess = Process(target=SmartMoveFinnder.findBestMove, args=(gs, validMoves, returnQueue))
+                moveFinderProcess = Process(target=findBestMove, args=(gs, validMoves, returnQueue))
                 moveFinderProcess.start()  # call findBestMove(gs, validMoves, returnQueue)
 
             if not moveFinderProcess.is_alive():
                 print("Done thinking")
                 AIMove = returnQueue.get()
                 if AIMove is None:
-                    AIMove = SmartMoveFinnder.findRandomMove(validMoves)
+                    AIMove = findRandomMove(validMoves)
                 gs.makeMove(AIMove)
                 moveMade = True
                 animate = True
