@@ -2,6 +2,9 @@
 
 PyChess is a Python-based chess engine developed using Pygame. It offers an interactive chess-playing experience with features like player vs player, player vs AI, animations, and move highlighting.
 
+Recommended use Pycharm
+or VScode after creating a virtual environment
+
 ## Features
 
 To change the modes, you can change the variables `PlayerOne` and `PlayerTwo` to TRUE inside the ChessMain.py inside 
@@ -49,7 +52,6 @@ Clone the repository:
 ```
 ### Run the game:
 python ChessMain.py
-
 ## Usage
 ### Player vs Player
  - Select the piece you want to move by clicking on it.
